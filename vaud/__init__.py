@@ -22,12 +22,12 @@ class Decoder:  # DON'T SEE HERE!
     @classmethod
     def r(cls, e, t):
         e = list(e)
-        o = cls.n + cls.n
+        o = cls.n * 2
         a = len(e) - 1
         while a:
             i = o.find(e[a])
             if ~i:
-                e[a] = o[i - t: 1]
+                e[a] = o[i - t: i - t + 1]
             a -= 1
         return ''.join(e)
 
@@ -59,7 +59,7 @@ class Decoder:  # DON'T SEE HERE!
     @classmethod
     def splice(cls, a, b, c, *d):
         if isinstance(b, (tuple, list)):
-            return cls.splice(a, b[0], b[1], d)
+            return cls.splice(a, b[0], b[1], c, d)
         c += b
         cash = list(a)
         a = a[b:c]
@@ -92,8 +92,8 @@ class Decoder:  # DON'T SEE HERE!
         a = 0
         t = 0
         r = ''
-        len_e = len(e)
-        while a < len_e:
+        e_length = len(e)
+        while a < e_length:
             i = cls.n.find(e[a])
             if ~i:
                 t = 64 * t + i if o % 4 else i
@@ -112,8 +112,7 @@ class Decoder:  # DON'T SEE HERE!
             t = self.decode_r(t[0])
             if not isinstance(n, str) or not t:
                 return url
-            splitter = chr(9)
-            n = n.split(splitter) if n else []
+            n = n.split(chr(9)) if n else []
             len_n = len(n)
             while len_n:
                 len_n -= 1
