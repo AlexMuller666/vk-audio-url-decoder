@@ -1,4 +1,6 @@
-# VK audio url decoder
+# VK audio url decoder [![Build Status](https://travis-ci.org/yuru-yuri/vk-audio-url-decoder.svg?branch=master)](https://travis-ci.org/yuru-yuri/vk-audio-url-decoder)
+
+[![PyPI](https://img.shields.io/pypi/v/vaud.svg)](https://pypi.org/project/vaud/)
 
 ## Usage:
 

@@ -1,4 +1,4 @@
-__version__ = '0.1'
+__version__ = '0.2'
 
 
 class Decoder:  # DON'T SEE HERE!
@@ -32,12 +32,12 @@ class Decoder:  # DON'T SEE HERE!
     def r(cls, e, t):
         e = list(e)
         o = cls.n * 2
-        a = len(e) - 1
+        a = len(e)
         while a:
+            a -= 1
             i = o.find(e[a])
             if ~i:
-                e[a] = o[i - t: i - t + 1]
-            a -= 1
+                e[a] = o[i - t]
         return ''.join(e)
 
     @classmethod
@@ -63,8 +63,9 @@ class Decoder:  # DON'T SEE HERE!
     @staticmethod
     def x(e, t):
         data = ''
+        t = ord(t[0])
         for i in e:
-            data += chr(ord(i[0]) ^ ord(t[0]))
+            data += chr(ord(i[0]) ^ t)
         return data
 
     @classmethod

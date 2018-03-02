@@ -49,7 +49,7 @@ class TestUrls(unittest.TestCase):
         try:
             vaud.decode('asd', 'abc')
             result = False
-        except TypeError: # python 3.*
+        except TypeError:  # python 3.*
             result = True
         except ValueError:  # python 2.7
             result = True
@@ -71,6 +71,23 @@ class TestUrls(unittest.TestCase):
         except AttributeError:
             result = True
         self.assertTrue(result)
+
+    def test_r(self):
+        decoder = vaud.Decoder(1)
+        self.assertTrue('Y++69:PP6R9+VSZ4.T53P' == decoder.r('https://pastebin.com/', 22))
+
+    def test_v(self):
+        decoder = vaud.Decoder(1)
+        self.assertTrue('abc' == decoder.v('cba'))
+
+    def test_x(self):
+        decoder = vaud.Decoder(1)
+        self.assertTrue('ZFFBA\u0008\u001d\u001dBSAFWP[\\\u001cQ]_\u001d' == decoder.x('https://pastebin.com/', '22'))
+
+    def test_abs(self):
+        decoder = vaud.Decoder(1)
+        self.assertTrue(decoder._abs(-1), 1)
+        self.assertTrue(decoder._abs(-1.1), 1.1)
 
 
 if __name__ == '__main__':

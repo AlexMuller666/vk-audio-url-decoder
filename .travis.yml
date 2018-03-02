@@ -1,11 +1,28 @@
 language: python
 python:
-- "2.7"
-- "3.4"
-- "3.5"
-- "3.6"
+- '2.7'
+- '3.5'
+- '3.6'
+env:
+  global:
+  - CC_TEST_REPORTER_ID=60ef418b01ff3218f7473f7a20f98bc3299e718f8bdfacdf84e4c8e41eca1db7
 cache: pip
 install:
 - pip install --upgrade coverage setuptools
+before_script:
+- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+- chmod +x ./cc-test-reporter
+- ./cc-test-reporter before-build
 script:
 - coverage run --source=vaud tests.py
+after_script:
+- coverage xml
+- ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT || true
+deploy:
+  provider: pypi
+  user: 1271
+  password:
+    secure: JfJG7aLb5UNe7zWQ+VVMCIhjx7oRMwqhNxpR9LVqB8vybHGXljex2d2Mj5W7czJ3G6o5mC/WPXf5jnbd1rIhYcoeEYcdUCCZVQ3gV9uxffHyx3pX0KiY7gqCr4xVKTxq/woitNCBIFwqtZpjO3OvhG1IGWzufFjLNekuxizoktcVNPDOGkMmWz1uIcRyLZL8LuN5fzcj7w+m2jlsY8fcQMO4gkCfbK5z3zOUhiY9aRCibZVVyPDHAbd2gUCf7fWW8yHMq08my1a5cayP32MWQbHG6JmSRAGD0rh/yAcsNMSiozwydnE8DRTKun4wUF7H0H/mqnCS0Yu1nuSEMAEdB86ZZ8dV3Wc2Ta/3gbotrpbuPd4G7KLZUTC8Fpot8kbir7PH9Ra+2UJilanFeQuq5q74lVD0Ke3/3MlD0oJy7V9Dl4vggIKWQMFS3wkkp3xWfuEqhk1ySZ+1LaHFH1e45Dt52y61oC5n+YR8CcC7wfZEpzYb9zHlhRtExUsqetNsKJ6Jv2eK8i6NkbaCXdClVfad/g5EVBf/5XC1/B6UUJNiZVCHAUIUIBRSEVcAfkqGfmun5PKFtz6lnakd7X7z/Y4JGTOzvFuHOJPrCkTF9eKAGlZTw/yfzSGwG4aPYZNIGIsBb+KXX15EHdXhWbdk+aVxRp6m8dLDp/wG9FvUknQ=
+  on:
+    branch: master
+    tags: true
