@@ -2,24 +2,16 @@
 import os
 
 from setuptools import setup
-from setuptools import find_packages
+from vaud import __version__
 
 here = os.path.abspath(os.path.dirname(__file__))
-
-try:
-    README = open(os.path.join(here, 'README.rst')).read()
-    CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
-except:
-    README = ''
-    CHANGES = ''
 
 requires = []
 
 setup(
     name='vaud',
-    version='0.1',
+    version=__version__,
     description='Simple vk.com audio address decoder',
-    long_description=README + '\n\n' + CHANGES,
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python",
@@ -35,12 +27,13 @@ setup(
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "License :: OSI Approved :: MIT License",
         ],
-    keywords='vk.com audio address decoder',
+    keywords=['vk.com audio address decoder', 'vk music'],
     author="Zharkov Sergey",
     author_email="sttvpc@gmail.com",
     url="https://github.com/yuru-yuri/vk-audio-url-decoder/",
+    download_url = 'https://github.com/yuru-yuri/vk-audio-url-decoder/archive/' + __version__ + '.tar.gz',
     license="MIT License (https://opensource.org/licenses/MIT)",
-    packages=find_packages(),
+    packages=['vaud'],
     include_package_data=False,
     zip_safe=False,
     tests_require=requires,

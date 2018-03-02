@@ -1,10 +1,14 @@
+__version__ = '0.1'
+
 
 class Decoder:  # DON'T SEE HERE!
     n = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0PQRSTUVWXYZO123456789+/='
     uid = 0
 
     def __init__(self, user_id):
-        self.uid = user_id
+        if user_id < 1:
+            raise AttributeError('Invalid uid!')
+        self.uid = int(user_id)
 
     @staticmethod
     def _abs(t):
@@ -14,6 +18,11 @@ class Decoder:  # DON'T SEE HERE!
                 n = -1.0
             t = t * n
         return t
+
+    @staticmethod
+    def _sort_object(e):
+        items = sorted(e.items(), key=lambda a: a[0])
+        return [i[1] for i in items]
 
     @staticmethod
     def v(e):
@@ -39,15 +48,17 @@ class Decoder:  # DON'T SEE HERE!
             o = 1
             e = list(e)
             while o < e_length:
-                _ = cls.splice(e, i[e_length - 1 - o], 1, e[o])
-                e = _[1]
-                e[o] = _[0][0]
+                _, e = cls.splice(e, i[e_length - 1 - o], 1, e[o])
+                e[o] = _[0]
                 o += 1
             e = ''.join(e)
         return e
 
     def i(self, e, t):
-        return self.s(e, int(t) ^ self.uid)
+        try:
+            return self.s(e, int(t) ^ self.uid)
+        except ValueError:
+            return e
 
     @staticmethod
     def x(e, t):
@@ -59,14 +70,12 @@ class Decoder:  # DON'T SEE HERE!
     @classmethod
     def splice(cls, a, b, c, *d):
         if isinstance(b, (tuple, list)):
-            return cls.splice(a, b[0], b[1], c, d)
+            return cls.splice(a, b[0], b[1], c, *d)
         c += b
         cash = list(a)
         a = a[b:c]
-        if len(d):
-            cash = cash[:b] + list(d) + cash[c:]
-        else:
-            cash = cash[:b] + cash[c:]
+        d = list(d)
+        cash = cash[:b] + d + cash[c:]
         return a, cash
 
     @classmethod
@@ -81,8 +90,7 @@ class Decoder:  # DON'T SEE HERE!
                 t = (e_length * (o + 1) ^ int(t) + o) % e_length
                 i[o] = t
 
-        items = sorted(i.items(), key=lambda a: a[0])
-        return [i[1] for i in items]
+        return cls._sort_object(i)
 
     @classmethod
     def decode_r(cls, e):
@@ -105,7 +113,7 @@ class Decoder:  # DON'T SEE HERE!
             a += 1
         return r
 
-    def main(self, url):
+    def decode(self, url):
         if ~url.find('audio_api_unavailable'):
             t = url.split('?extra=')[1].split('#')
             n = '' if '' == t[1] else self.decode_r(t[1])
@@ -117,11 +125,9 @@ class Decoder:  # DON'T SEE HERE!
             while len_n:
                 len_n -= 1
                 s = n[len_n].split(chr(11))
-                s = self.splice(s, 0, 1, t)
-                a = s[0][0]
-                s = s[1]
-                _ = getattr(self, a, None)
-                if not _:
+                a, s = self.splice(s, 0, 1, t)
+                _ = getattr(self, a[0], None)
+                if not _ or len(s) < 2:
                     return url
                 t = _(*s)
             if t[:4] == 'http':
@@ -130,7 +136,7 @@ class Decoder:  # DON'T SEE HERE!
 
 
 def decode(uid, url):
-    return Decoder(int(uid)).main(url)
+    return Decoder(uid).decode(url)
 
 
 def main():
