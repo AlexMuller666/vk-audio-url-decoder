@@ -49,7 +49,9 @@ class TestUrls(unittest.TestCase):
         try:
             vaud.decode('asd', 'abc')
             result = False
-        except TypeError:
+        except TypeError: # python 3.*
+            result = True
+        except ValueError:  # python 2.7
             result = True
         self.assertTrue(result)
 
