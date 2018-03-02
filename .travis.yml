@@ -5,6 +5,6 @@ python:
 - "3.6"
 cache: pip
 install:
-- pip install --upgrade coverage setuptools pyinstaller PyQt5
+- pip install --upgrade coverage setuptools
 script:
-- coverage run --source=vaud tests/test_urls.py
+- coverage run --source=vaud tests.py
