@@ -1,4 +1,4 @@
-__version__ = '0.2'
+__version__ = '0.2.1'
 
 
 class Decoder:  # DON'T SEE HERE!
@@ -138,8 +138,3 @@ class Decoder:  # DON'T SEE HERE!
 
 def decode(uid, url):
     return Decoder(uid).decode(url)
-
-
-def main():
-    print('Usage: import vaud; vaul.decode(uid, url)')
-    print('Or: import vaud; decoder = vaul.Decoder(uid); decoder(url1);decoder(url2)')
