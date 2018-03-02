@@ -82,7 +82,9 @@ class TestUrls(unittest.TestCase):
 
     def test_x(self):
         decoder = vaud.Decoder(1)
-        self.assertTrue('ZFFBA\u0008\u001d\u001dBSAFWP[\\\u001cQ]_\u001d' == decoder.x('https://pastebin.com/', '22'))
+        p = decoder.x('https://pastebin.com/', '22')
+        e = u'ZFFBA\u0008\u001d\u001dBSAFWP[\\\u001cQ]_\u001d'  # py2 crunch
+        self.assertTrue(e == p)
 
     def test_abs(self):
         decoder = vaud.Decoder(1)
