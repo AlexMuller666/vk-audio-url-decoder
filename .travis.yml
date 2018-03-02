@@ -21,6 +21,9 @@ script:
 after_script:
 - coverage xml
 - ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT || true
+before_deploy:
+- chmod +x ./before_deploy.sh
+- source ./before_deploy.sh
 deploy:
   provider: pypi
   user: 1271
@@ -29,4 +32,4 @@ deploy:
   on:
     branch: master
     tags: true
-    condition: "${TRAVIS_PYTHON_VERSION:0:3} == 3.5"
+    condition: "$allow_deploy == true"
