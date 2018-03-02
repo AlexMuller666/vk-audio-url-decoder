@@ -3,6 +3,9 @@ python:
 - '2.7'
 - '3.5'
 - '3.6'
+#os:
+#  - linux
+#  - osx
 env:
   global:
   - CC_TEST_REPORTER_ID=60ef418b01ff3218f7473f7a20f98bc3299e718f8bdfacdf84e4c8e41eca1db7
