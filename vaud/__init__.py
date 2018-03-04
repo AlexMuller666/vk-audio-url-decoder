@@ -1,4 +1,4 @@
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 
 
 class Decoder:  # DON'T SEE HERE!
@@ -9,15 +9,6 @@ class Decoder:  # DON'T SEE HERE!
         if user_id < 1:
             raise AttributeError('Invalid uid!')
         self.uid = int(user_id)
-
-    @staticmethod
-    def _abs(t):
-        if t < 0:
-            n = -1
-            if isinstance(t, float):
-                n = -1.0
-            t = t * n
-        return t
 
     @staticmethod
     def _sort_object(e):
@@ -85,7 +76,7 @@ class Decoder:  # DON'T SEE HERE!
         i = {}
         if e_length:
             o = e_length
-            t = cls._abs(t)  # without math.fabs
+            t = abs(t)
             while o:
                 o -= 1
                 t = (e_length * (o + 1) ^ int(t) + o) % e_length

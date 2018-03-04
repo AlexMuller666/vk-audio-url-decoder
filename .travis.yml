@@ -12,6 +12,8 @@ env:
 cache: pip
 install:
 - pip install --upgrade coverage setuptools
+- chmod +x ./before_deploy.sh
+- source ./before_deploy.sh
 before_script:
 - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
 - chmod +x ./cc-test-reporter
@@ -21,9 +23,6 @@ script:
 after_script:
 - coverage xml
 - ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT || true
-before_deploy:
-- chmod +x ./before_deploy.sh
-- source ./before_deploy.sh
 deploy:
   provider: pypi
   user: 1271
