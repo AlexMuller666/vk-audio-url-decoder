@@ -1,5 +1,5 @@
 import unittest
-import vaud
+from . import Decoder, decode
 
 
 class TestUrls(unittest.TestCase):
@@ -11,27 +11,27 @@ class TestUrls(unittest.TestCase):
     ]
 
     def test_urls(self):
-        decoder = vaud.Decoder(self.__uid)
+        decoder = Decoder(self.__uid)
 
         for url in self.__urls:
             decoded_url = decoder.decode(url)
             self.assertFalse(~decoded_url.find('audio_api_unavailable'))
 
     def test_url(self):
-        decoded_url = vaud.decode(self.__uid, self.__urls[0])
+        decoded_url = decode(self.__uid, self.__urls[0])
         self.assertFalse(~decoded_url.find('audio_api_unavailable'))
 
     def test_fail_url1(self):
-        decoded_url = vaud.decode(self.__uid, self.__urls[0] + 'abc')
+        decoded_url = decode(self.__uid, self.__urls[0] + 'abc')
         self.assertTrue(~decoded_url.find('audio_api_unavailable'))
 
     def test_fail_url2(self):
-        decoded_url = vaud.decode(self.__uid, self.__urls[0][:-5])
+        decoded_url = decode(self.__uid, self.__urls[0][:-5])
         self.assertTrue(~decoded_url.find('audio_api_unavailable'))
 
     def test_assert1(self):
         try:
-            vaud.decode()
+            decode()
             result = False
         except TypeError:
             result = True
@@ -39,7 +39,7 @@ class TestUrls(unittest.TestCase):
 
     def test_assert2(self):
         try:
-            vaud.decode('asd')
+            decode('asd')
             result = False
         except TypeError:
             result = True
@@ -47,7 +47,7 @@ class TestUrls(unittest.TestCase):
 
     def test_assert3(self):
         try:
-            vaud.decode('asd', 'abc')
+            decode('asd', 'abc')
             result = False
         except TypeError:  # python 3.*
             result = True
@@ -57,7 +57,7 @@ class TestUrls(unittest.TestCase):
 
     def test_assert4(self):
         try:
-            decoder = vaud.Decoder()
+            decoder = Decoder()
             result = False
         except TypeError:
             result = True
@@ -66,30 +66,25 @@ class TestUrls(unittest.TestCase):
     def test_assert5(self):
 
         try:
-            decoder = vaud.Decoder(0)
+            decoder = Decoder(0)
             result = False
         except AttributeError:
             result = True
         self.assertTrue(result)
 
     def test_r(self):
-        decoder = vaud.Decoder(1)
+        decoder = Decoder(1)
         self.assertTrue('Y++69:PP6R9+VSZ4.T53P' == decoder.r('https://pastebin.com/', 22))
 
     def test_v(self):
-        decoder = vaud.Decoder(1)
+        decoder = Decoder(1)
         self.assertTrue('abc' == decoder.v('cba'))
 
     def test_x(self):
-        decoder = vaud.Decoder(1)
+        decoder = Decoder(1)
         p = decoder.x('https://pastebin.com/', '22')
         e = u'ZFFBA\u0008\u001d\u001dBSAFWP[\\\u001cQ]_\u001d'  # py2 crunch
         self.assertTrue(e == p)
-
-    def test_abs(self):
-        decoder = vaud.Decoder(1)
-        self.assertTrue(decoder._abs(-1), 1)
-        self.assertTrue(decoder._abs(-1.1), 1.1)
 
 
 if __name__ == '__main__':

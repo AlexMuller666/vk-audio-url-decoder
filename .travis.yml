@@ -19,7 +19,7 @@ before_script:
 - chmod +x ./cc-test-reporter
 - ./cc-test-reporter before-build
 script:
-- coverage run --source=vaud tests.py
+- coverage run --source=vaud --omit=vaud/tests.py vaud/tests.py
 after_script:
 - coverage xml
 - ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT || true
