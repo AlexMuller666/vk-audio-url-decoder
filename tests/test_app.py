@@ -1,5 +1,5 @@
 import unittest
-from . import Decoder, decode
+from vaud import Decoder, decode
 
 
 class TestUrls(unittest.TestCase):
