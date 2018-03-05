@@ -10,7 +10,7 @@ def tests():
     return suite
 
 
-requires = []
+requires = ['requests']
 
 setup(
     name='vaud',

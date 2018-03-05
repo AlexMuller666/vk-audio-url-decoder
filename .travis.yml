@@ -11,7 +11,7 @@ env:
   - CC_TEST_REPORTER_ID=60ef418b01ff3218f7473f7a20f98bc3299e718f8bdfacdf84e4c8e41eca1db7
 cache: pip
 install:
-- pip install --upgrade coverage setuptools
+- pip install --upgrade coverage setuptools requests
 - chmod +x ./before_deploy.sh
 - source ./before_deploy.sh
 before_script:
