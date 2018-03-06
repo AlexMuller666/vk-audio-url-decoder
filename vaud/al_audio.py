@@ -48,7 +48,7 @@ class AlAudio(object):
         self._cookies = cookies
         self._playlist = []
 
-    def decode(self):
+    def main(self):
         self._fill_playlist()
         return self._parse_playlist()
 

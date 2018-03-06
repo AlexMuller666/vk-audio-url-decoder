@@ -27,7 +27,7 @@ class TestAudio(unittest.TestCase):
 
     def test_vk(self):
         aa = MockAlAudio(self.__uid, cookies={})
-        items = aa.decode()
+        items = aa.main()
 
         self.assertTrue(len(items) > 100)
         self.assertTrue(isinstance(items[-1], tuple))
@@ -35,6 +35,6 @@ class TestAudio(unittest.TestCase):
 
     def test_decode_item(self):
         aa = MockAlAudio(self.__uid, cookies={})
-        items = aa.decode()
+        items = aa.main()
         self.assertFalse(~vaud.decode(self.__uid, items[0][0]).find('audio_api_unavailable'))
         self.assertFalse(~vaud.decode(self.__uid, items[-1][0]).find('audio_api_unavailable'))
