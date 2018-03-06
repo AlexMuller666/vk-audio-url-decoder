@@ -94,7 +94,7 @@ class AlAudio(object):
                 official_parse.append(i)
             else:
                 response.append((i[2], i[3], i[4]))
-            if len(official_parse) > 5:
+            if len(official_parse) > self._split_audio_size:
                 time.sleep(self._sleep_time / 20)
                 response += self._parse_list_items(official_parse)
                 official_parse = []
