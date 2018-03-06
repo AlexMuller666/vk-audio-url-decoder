@@ -4,11 +4,11 @@ import requests
 import time
 
 
-class AlAudio:
+class AlAudio(object):
     _api_url = 'https://vk.com/al_audio.php'
     _cookies = None
     _uid = None
-    _user_agent = '{} {} {} {}'.format(
+    _user_agent = '%s %s %s %s' % (
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
         'AppleWebKit/537.36 (KHTML, like Gecko)',
         'Chrome/60.0.3112.101',
@@ -55,30 +55,57 @@ class AlAudio:
     def set_playlist_id(self, _id):
         self._playlist_id = _id
 
-    def _parse_playlist(self):
-        items = []
-        _ = []
-        for n, i in enumerate(self._playlist):
-            if n > 0 and n % self._split_audio_size == 0:
-                items += self._parse_list_items(_)
-                _ = []
-                time.sleep(self._sleep_time / 20)
-            _.append(i)
-        if len(_):
-            items += self._parse_list_items(_)
-        return items
-
     def _fill_playlist(self, offset=0):
         response = self._parse_response(self._post(
             self._api_url,
             self._load_data(offset)
         ))
         if response.get('type', '') != 'playlist':
-            return []
+            return
         self._playlist += response.get('list', [])
         if int(response.get('hasMore', 0)) != 0:
             time.sleep(self._sleep_time)  # sleeping. anti-bot
             self._fill_playlist(response.get('nextOffset'))
+
+    def _post(self, url, data):
+        response = requests.post(
+            url, data=data,
+            headers=self._headers,
+            cookies=self._cookies
+        )
+        for i in response.cookies:
+            self._cookies[i] = response.cookies[i]
+        return response.text
+
+    @staticmethod
+    def _parse_response(response, default=None):
+        if default is None:
+            default = {}
+        try:
+            data = re.search(r'<!json>(.+?)<!>', response).group(1)
+            return json.loads(data)
+        except Exception:
+            return default
+
+    def _parse_playlist(self):
+        official_parse = []
+        response = []
+        for i in self._playlist:
+            if i[2] == '':
+                official_parse.append(i)
+            else:
+                response.append((i[2], i[3], i[4]))
+            if len(official_parse) > 5:
+                time.sleep(self._sleep_time / 20)
+                response += self._parse_list_items(official_parse)
+                official_parse = []
+        return response
+
+    def _parse_list_items(self, items):
+        result = []
+        for item in items:
+            result.append('%d_%d' % (item[1], item[0]))
+        return self._decode_playlist(result)
 
     @staticmethod
     def _get_reload_data(ids):
@@ -87,41 +114,6 @@ class AlAudio:
             'al': 1,
             'ids': ','.join(ids)
         }
-
-    def _post(self, url, data):
-        response = requests.post(
-            url, data=json.dumps(data),
-            headers=self._headers,
-            cookies=self._cookies
-        )
-        self._cookies = response.cookies
-        # print(response.text.split('\n')[0])
-        return response.text
-
-    @classmethod
-    def _parse_response(cls, response):
-        try:
-            data = re.search(r'<!json>(.+?)<!>', response).group(1)
-            return json.loads(data)
-        except Exception:
-            return {}
-
-    @staticmethod
-    def __name(item):
-        title = ''
-        if item[4] != '':
-            title += item[4]
-        if title != '':
-            title += ' - '
-        if item[3] != '':
-            title += item[3]
-        return title
-
-    def _parse_list_items(self, items):
-        result = []
-        for item in items:
-            result.append('%d_%d' % (item[1], item[0]))
-        return self._decode_playlist(result)
 
     def _decode_playlist(self, items):
         data = self._post(
@@ -133,5 +125,5 @@ class AlAudio:
     def _rebuild_response(self, response):
         data = self._parse_response(response)
         if isinstance(data, list):
-            return [i[2] for i in data]
+            return [(i[2], i[3], i[4]) for i in data]
         return []
