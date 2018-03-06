@@ -39,11 +39,18 @@ class AlAudio(object):
             'X-Requested-With': 'XMLHttpRequest',
             'Connection': 'keep-alive',
             'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
+            'Cache-Control': 'no-cache',
+            'Referer': 'https://vk.com/audios%d' % self._uid,
         }
 
     def __init__(self, uid, cookies):
-        self._uid = uid
+        """
+        :param uid: user_id
+        :type uid: int
+        :param cookies:
+        :type cookies: dict
+        """
+        self._uid = int(uid)
         self._cookies = cookies
         self._playlist = []
 
