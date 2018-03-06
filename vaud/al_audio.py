@@ -14,7 +14,6 @@ class AlAudio(object):
         'Chrome/60.0.3112.101',
         'Safari/537.36'
     )
-    _loaded_count = 0
     _playlist = None
     _playlist_id = -1  # Default - all tracks
     _sleep_time = 1
