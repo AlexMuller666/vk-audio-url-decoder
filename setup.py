@@ -1,13 +1,6 @@
 
 from setuptools import setup
 from vaud import __version__
-import unittest
-
-
-def tests():
-    loader = unittest.TestLoader()
-    suite = loader.discover('tests', pattern='test_*.py')
-    return suite
 
 
 requires = []
@@ -40,5 +33,5 @@ setup(
     zip_safe=False,
     tests_require=requires,
     install_requires=requires,
-    test_suite="setup.tests",
+    test_suite="tests",
 )

@@ -5,6 +5,8 @@ current_dir = path.dirname(path.realpath(__file__))
 
 
 class MockAlAudio(vaud.AlAudio):
+    _sleep_time = 0
+
     def _post(self, url, data):
         _path = '%s/data/%s_%s.txt' % (
             current_dir,

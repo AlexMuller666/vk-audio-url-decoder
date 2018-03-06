@@ -85,7 +85,3 @@ class TestUrls(unittest.TestCase):
         p = decoder.x('https://pastebin.com/', '22')
         e = u'ZFFBA\u0008\u001d\u001dBSAFWP[\\\u001cQ]_\u001d'  # py2 crunch
         self.assertTrue(e == p)
-
-
-# if __name__ == '__main__':
-#     unittest.main()
