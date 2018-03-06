@@ -10,20 +10,22 @@
 
 ## Usage:
 
+
+```bash
+pip install vaud
+```
+
 ### Decode urls:
 
 ```python
-
 import vaud
 
 uid = 1
 url = 'https://m.vk.com/mp3/audio_api_unavailable.mp3?extra=zuHdAgfLvxaXtd1W...CsDasdvv32yLjpy3yVBxrm#AqVYStC'
 decoded_url = vaud.decode(uid, url)  # One track
-
 ```
 
 ```python
-
 import vaud
 
 uid = 1
@@ -36,11 +38,9 @@ decoder = vaud.Decoder(uid)  # Multiple tracks
 decoded_urls = []
 for url in urls:
     decoded_urls.append(decoder.decode(url))
-
 ```
 
 ```python
-
 import vaud
 
 # DO NOT DO THIS! :
@@ -57,13 +57,11 @@ decoded_urls = [
 
 for url in urls:
     decoded_urls.append(vaud.decode(uid, url))
-
 ```
 
 ### Get all audio (not auto-decode):
 
 ```python
-
 import vaud
 
 my_vk = MyVkClass()  # Own class for vk.com
@@ -74,5 +72,4 @@ audio_parser = vaud.AlAudio(uid, cookies)
 all_urls = audio_parser.main()  [('encoded_url', 'Track name', 'Author'), ('encoded_url', 'Track name', 'Author')]
 
 decoded_urls = []  # Look before examples
-
 ```
