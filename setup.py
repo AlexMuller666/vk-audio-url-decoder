@@ -1,6 +1,13 @@
 
 from setuptools import setup
 from vaud import __version__
+from os.path import isfile
+
+_readme = 'README.rst'
+long_description = ''
+if isfile(_readme):
+    with open(_readme) as f:
+        long_description = f.read()
 
 
 requires = []
@@ -9,6 +16,7 @@ setup(
     name='vaud',
     version=__version__,
     description='Simple vk.com audio address decoder',
+    long_description=long_description,
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python",
