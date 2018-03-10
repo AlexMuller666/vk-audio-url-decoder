@@ -142,7 +142,7 @@ class AlAudio(object):
     def _get_tracks_ids(items):
         return [i[0] for i in items]
 
-    def _check_un_parsed_tracks(self, items: list, response: list):
+    def _check_un_parsed_tracks(self, items, response):
         idx = self._get_tracks_ids(response)
         for i in items:
             if i not in idx:
