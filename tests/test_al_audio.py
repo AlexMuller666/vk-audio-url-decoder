@@ -15,8 +15,8 @@ class MockAlAudio(vaud.AlAudio):
         )
         if path.isfile(_path):
             try:
-                with open(_path, 'r') as f:
-                    data = f.read()
+                with open(_path, 'rb') as f:
+                    data = f.read().decode()
             except Exception:
                 data = ''
         else:

@@ -18,6 +18,11 @@ class AlAudio(object):
     _playlist_id = -1  # Default - all tracks
     _sleep_time = 1
     _split_audio_size = 5
+    _un_parsed_tracks = None
+    limit = 0
+    offset = 0
+    debug = False
+    response_debug_callback = None
 
     def _load_data(self, offset=0):
         return {
@@ -53,22 +58,34 @@ class AlAudio(object):
         self._uid = int(uid)
         self._cookies = cookies
         self._playlist = []
+        self._un_parsed_tracks = []
 
     def main(self):
         self._fill_playlist()
-        return self._parse_playlist()
+        response = self._parse_playlist()
+        if len(response) > self.limit > 0:
+            response = response[0:self.limit]
+        return response
 
     def set_playlist_id(self, _id):
         self._playlist_id = _id
 
     def _fill_playlist(self, offset=0):
+        if offset == 0 and self.offset > 0:
+            offset = self.offset
+
         response = self._parse_response(self._post(
             self._api_url,
             self._load_data(offset)
         ))
-        if response.get('type', '') != 'playlist':
+
+        check_type = response.get('type', '') != 'playlist'
+
+        if check_type or len(self._playlist) >= self.limit > 0:
             return
+
         self._playlist += response.get('list', [])
+
         if int(response.get('hasMore', 0)) != 0:
             time.sleep(self._sleep_time)  # sleeping. anti-bot
             self._fill_playlist(response.get('nextOffset'))
@@ -79,7 +96,7 @@ class AlAudio(object):
             headers=self._headers,
             cookies=self._cookies
         )
-        for i in response.cookies:
+        for i in response.cookies.get_dict():
             self._cookies[i] = response.cookies[i]
         return response.text
 
@@ -94,17 +111,17 @@ class AlAudio(object):
             return default
 
     def _parse_playlist(self):
-        official_parse = []
+        post_load = []
         response = []
         for i in self._playlist:
             if i[2] == '':
-                official_parse.append(i)
+                post_load.append(i)
             else:
-                response.append((i[2], i[3], i[4]))
-            if len(official_parse) > self._split_audio_size:
+                response.append((i[2], i[3], i[4], i[0]))
+            if len(post_load) > self._split_audio_size:
                 time.sleep(self._sleep_time / 20)
-                response += self._parse_list_items(official_parse)
-                official_parse = []
+                response += self._parse_list_items(post_load)
+                post_load = []
         return response
 
     def _parse_list_items(self, items):
@@ -121,15 +138,43 @@ class AlAudio(object):
             'ids': ','.join(ids)
         }
 
+    @staticmethod
+    def _get_tracks_ids(items):
+        return [i[0] for i in items]
+
+    def _check_un_parsed_tracks(self, items: list, response: list):
+        idx = self._get_tracks_ids(response)
+        for i in items:
+            if i not in idx:
+                self._un_parsed_tracks.append(i)
+
     def _decode_playlist(self, items):
-        data = self._post(
+        response = self._post(
             self._api_url,
             self._get_reload_data(items)
         )
-        return self._rebuild_response(data)
+
+        _ = self._parse_response(response)
+        if not isinstance(_, list) or len(_) < 1:
+            if self.debug:
+                print('Time ban. Sleep...')
+
+            time.sleep(self._sleep_time)
+
+            response = self._post(
+                self._api_url,
+                self._get_reload_data(items)
+            )
+
+            callable(self.response_debug_callback) and self.response_debug_callback(response)
+
+        if len(response) < len(items):
+            self._check_un_parsed_tracks(items, response)
+
+        return self._rebuild_response(response)
 
     def _rebuild_response(self, response):
         data = self._parse_response(response)
         if isinstance(data, list):
-            return [(i[2], i[3], i[4]) for i in data]
+            return [(i[2], i[3], i[4], i[0]) for i in data]
         return []
