@@ -1,6 +1,6 @@
 import unittest
 import vaud
-from os import path
+from os import path, name
 current_dir = path.dirname(path.realpath(__file__))
 
 
@@ -15,8 +15,12 @@ class MockAlAudio(vaud.AlAudio):
         )
         if path.isfile(_path):
             try:
-                with open(_path, 'rb') as f:
-                    data = f.read().decode()
+                if name == 'nt':
+                    with open(_path, 'rb') as f:
+                        data = f.read().decode()
+                else:
+                    with open(_path, 'r') as f:
+                        data = f.read()
             except Exception:
                 data = ''
         else:
