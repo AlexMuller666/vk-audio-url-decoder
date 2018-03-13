@@ -130,9 +130,8 @@ class AlAudioBase(object):
             self._list_post_load = []
 
     def _parse_list_items(self, items):
-        result = []
-        for item in items:
-            result.append('%d_%d' % (item[1], item[0]))
+        _ = lambda item: '%d_%d' % (item[1], item[0])
+        result = map(_, items)
         self._list_decoded_tracks += self._decode_playlist(result)
 
     def _decode_playlist(self, items):
@@ -160,9 +159,8 @@ class AlAudioBase(object):
 
     @staticmethod
     def __get_tracks_ids(items):
-        def __x(x):
-            return x[0]
-        return map(__x, items)
+        _ = lambda x: x[0]
+        return map(_, items)
 
     def __check_un_parsed_tracks(self, items, response):
         idx = self.__get_tracks_ids(response)
@@ -173,5 +171,5 @@ class AlAudioBase(object):
     def __rebuild_response(self, response):
         data = self._parse_response(response)
         if isinstance(data, list):
-            return [self.__parse_track(i) for i in data]
+            return map(self.__parse_track, data)
         return []
