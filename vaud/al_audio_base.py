@@ -135,28 +135,24 @@ class AlAudioBase(object):
             self._list_post_load = []
 
     def _parse_list_items(self, items):
-        def _(item):
-            return '%d_%d' % (item[1], item[0])
-        result = map(_, items)
-        self._list_decoded_tracks += self._decode_playlist(result)
+        items = ['%d_%d' % (item[1], item[0]) for item in items]
+        self._list_decoded_tracks += self._decode_playlist(items)
 
     def _decode_playlist(self, items):
-        response = self._post(
+        response = self._parse_response(self._post(
             self._api_url,
             self._reload_data(items)
-        )
+        ))
 
-        _ = self._parse_response(response)
-        if not isinstance(_, list) or len(_) < 1:
-
+        if not isinstance(response, list) or len(response) < 1:
             sleep(self._sleep_time)
-
             response = self._post(
                 self._api_url,
                 self._reload_data(items)
             )
 
             callable(self.debug_callback) and self.debug_callback(response)
+            response = self._parse_response(response)
 
         if len(response) < len(list(items)):
             self.__check_un_parsed_tracks(items, response)
@@ -165,9 +161,7 @@ class AlAudioBase(object):
 
     @staticmethod
     def __get_tracks_ids(items):
-        def _(x):
-            return x[0]
-        return map(_, items)
+        return [i[0] for i in items]
 
     def __check_un_parsed_tracks(self, items, response):
         idx = self.__get_tracks_ids(response)
@@ -176,7 +170,6 @@ class AlAudioBase(object):
                 self._list_unparsed_tracks.append(i)
 
     def __rebuild_response(self, response):
-        data = self._parse_response(response)
-        if isinstance(data, list):
-            return map(self.__parse_track, data)
+        if isinstance(response, list):
+            return list(map(self.__parse_track, response))
         return []

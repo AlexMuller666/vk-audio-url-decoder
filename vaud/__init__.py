@@ -1,7 +1,7 @@
 from .al_audio import AlAudio
 from .decoder import Decoder
 
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 
 def decode(uid, url):

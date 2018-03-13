@@ -36,7 +36,7 @@ class TestAudio(unittest.TestCase):
         aa = MockAlAudio(self.__uid, cookies={})
         items = aa.main()
 
-        self.assertTrue(len(items) > 100)
+        self.assertTrue(len(items) + len(aa._list_unparsed_tracks) == len(aa._playlist))
         self.assertTrue(isinstance(items[-1], dict))
 
         self.assertFalse(~vaud.decode(self.__uid, items[0]['url']).find('audio_api_unavailable'))
