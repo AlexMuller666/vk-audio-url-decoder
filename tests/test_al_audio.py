@@ -24,7 +24,8 @@ class MockAlAudio(vaud.AlAudio):
             except Exception:
                 data = ''
         else:
-            data = super(MockAlAudio, self)._post(url, data)
+            # _openssl.SSL_do_handshake  Very long
+            data = ''  # super(MockAlAudio, self)._post(url, data)
         return data
 
 

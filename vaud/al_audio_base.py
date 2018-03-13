@@ -7,7 +7,7 @@ from time import sleep
 class AlAudioBase(object):
     limit = 0
     offset = 0
-    response_debug_callback = None
+    debug_callback = None
     force_data = False  # Ignore hasMore flag from response
 
     _api_url = 'https://vk.com/al_audio.php'
@@ -77,7 +77,12 @@ class AlAudioBase(object):
         """
         if self._response_as_tuples_list:
             return item[2], item[3], item[4], item[0]
-        return {'url': item[2], 'track': item[3], 'author': item[4], 'id': item[0]}
+        return {
+            'url': item[2],
+            'track': item[3],
+            'author': item[4],
+            'id': item[0]
+        }
 
     def _get_playlist_response(self, offset):
         if offset == 0 and self.offset > 0:
@@ -95,7 +100,7 @@ class AlAudioBase(object):
                 self._load_data(offset)
             )
 
-            callable(self.response_debug_callback) and self.response_debug_callback(response)
+            callable(self.debug_callback) and self.debug_callback(response)
 
             response = self._parse_response(response)
         return response
@@ -130,7 +135,8 @@ class AlAudioBase(object):
             self._list_post_load = []
 
     def _parse_list_items(self, items):
-        _ = lambda item: '%d_%d' % (item[1], item[0])
+        def _(item):
+            return '%d_%d' % (item[1], item[0])
         result = map(_, items)
         self._list_decoded_tracks += self._decode_playlist(result)
 
@@ -150,16 +156,17 @@ class AlAudioBase(object):
                 self._reload_data(items)
             )
 
-            callable(self.response_debug_callback) and self.response_debug_callback(response)
+            callable(self.debug_callback) and self.debug_callback(response)
 
-        if len(response) < len(items):
+        if len(response) < len(list(items)):
             self.__check_un_parsed_tracks(items, response)
 
         return self.__rebuild_response(response)
 
     @staticmethod
     def __get_tracks_ids(items):
-        _ = lambda x: x[0]
+        def _(x):
+            return x[0]
         return map(_, items)
 
     def __check_un_parsed_tracks(self, items, response):

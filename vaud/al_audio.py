@@ -17,7 +17,9 @@ class AlAudio(AlAudioBase):
 
     def main(self, as_tuples_list=False):
         """
-        :param as_tuples_list: Get response as [tuple,tuple,..]. Default as [dict, dict, ..]
+        :param as_tuples_list:
+         Get response as [tuple,tuple,..], if as_tuples_list = True
+         Default as [dict, dict, ..]
         :type bool
         :return:
         """
@@ -25,7 +27,7 @@ class AlAudio(AlAudioBase):
         self._fill_playlist()
         self._parse_playlist()
 
-        response = self._list_decoded_tracks
+        response = list(self._list_decoded_tracks)
         if 0 < self.limit < len(response):
             response = response[0:self.limit]
         return response
