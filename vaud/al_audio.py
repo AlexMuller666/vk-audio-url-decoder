@@ -16,13 +16,14 @@ class AlAudio(object):
     )
     _playlist = None
     _playlist_id = -1  # Default - all tracks
-    _sleep_time = 1
+    _sleep_time = 10
     _split_audio_size = 5
     _un_parsed_tracks = None
     limit = 0
     offset = 0
     debug = False
     response_debug_callback = None
+    force_data = False  # Ignore hasMore flag from response
 
     def _load_data(self, offset=0):
         return {
@@ -70,7 +71,7 @@ class AlAudio(object):
     def set_playlist_id(self, _id):
         self._playlist_id = _id
 
-    def _fill_playlist(self, offset=0):
+    def __get_playlist_response(self, offset):
         if offset == 0 and self.offset > 0:
             offset = self.offset
 
@@ -78,6 +79,16 @@ class AlAudio(object):
             self._api_url,
             self._load_data(offset)
         ))
+        if not response or len(response.get('list', [])) < 1:
+            time.sleep(self._sleep_time * 2)  # spam-ban. sleeping.
+            response = self._parse_response(self._post(
+                self._api_url,
+                self._load_data(offset)
+            ))
+        return response
+
+    def _fill_playlist(self, offset=0):
+        response = self.__get_playlist_response(offset)
 
         check_type = response.get('type', '') != 'playlist'
 
@@ -86,8 +97,8 @@ class AlAudio(object):
 
         self._playlist += response.get('list', [])
 
-        if int(response.get('hasMore', 0)) != 0:
-            time.sleep(self._sleep_time)  # sleeping. anti-bot
+        if self.force_data or int(response.get('hasMore', 0)) != 0:
+            time.sleep(self._sleep_time)  # spam-ban. sleeping.
             self._fill_playlist(response.get('nextOffset'))
 
     def _post(self, url, data):
