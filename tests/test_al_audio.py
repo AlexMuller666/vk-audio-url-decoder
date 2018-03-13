@@ -31,16 +31,21 @@ class MockAlAudio(vaud.AlAudio):
 class TestAudio(unittest.TestCase):
     __uid = 165962770
 
-    def test_vk(self):
+    def test_decode_item(self):
         aa = MockAlAudio(self.__uid, cookies={})
         items = aa.main()
 
         self.assertTrue(len(items) > 100)
-        self.assertTrue(isinstance(items[-1], tuple))
-        self.assertTrue(~items[-1][0].find('audio_api_unavailable'))
+        self.assertTrue(isinstance(items[-1], dict))
 
-    def test_decode_item(self):
+        self.assertFalse(~vaud.decode(self.__uid, items[0]['url']).find('audio_api_unavailable'))
+        self.assertFalse(~vaud.decode(self.__uid, items[-1]['url']).find('audio_api_unavailable'))
+
+    def test_decode_item_as_tuple(self):
         aa = MockAlAudio(self.__uid, cookies={})
-        items = aa.main()
+        items = aa.main(True)
+
+        self.assertTrue(isinstance(items[0], tuple))
+
         self.assertFalse(~vaud.decode(self.__uid, items[0][0]).find('audio_api_unavailable'))
         self.assertFalse(~vaud.decode(self.__uid, items[-1][0]).find('audio_api_unavailable'))

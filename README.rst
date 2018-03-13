@@ -38,25 +38,6 @@ Decode urls:
     for url in urls:
         decoded_urls.append(decoder.decode(url))
 
-.. code:: python
-
-    import vaud
-
-    # DO NOT DO THIS! :
-    # (This creates a lot of unnecessary classes for the loop)
-    # For loop use previous example 
-
-    uid = 1
-    urls = []
-    decoded_urls = [
-        'https://m.vk.com/mp3/audio_api_unavailable.mp3?extra=zuHdAgfLvxaXtd1W...CsDasdvv32yLjpy3yVBxrm#AqVYStC',
-        'https://m.vk.com/mp3/audio_api_unavailable.mp3?extra=zuHdAgfLvxaXtd1W...CsDasdvv32yLjpy3yVBxrm#AqVYStC',
-        'https://m.vk.com/mp3/audio_api_unavailable.mp3?extra=zuHdAgfLvxaXtd1W...CsDasdvv32yLjpy3yVBxrm#AqVYStC',
-    ]
-
-    for url in urls:
-        decoded_urls.append(vaud.decode(uid, url))
-
 Get all audio (not auto-decode):
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -69,7 +50,8 @@ Get all audio (not auto-decode):
     uid = my_vk.uid  # User id
 
     audio_parser = vaud.AlAudio(uid, cookies)
-    all_urls = audio_parser.main()  [('encoded_url', 'Track name', 'Author'), ('encoded_url', 'Track name', 'Author')]
+    urls = audio_parser.main()  [{'ur': 'Encoded url', 'track': 'Track title', 'author': 'Author', 'id': 'VK Track id'}, ...]
+    urls = audio_parser.main(True)  [('Encoded url', 'Track title', 'Author', 'VK Track id'), ...]
 
     decoded_urls = []  # Look before examples
 
