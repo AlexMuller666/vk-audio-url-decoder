@@ -156,8 +156,9 @@ class AlAudio(object):
     def _check_un_parsed_tracks(self, items, response):
         idx = self._get_tracks_ids(response)
         for i in items:
-            if i not in idx:
-                self._un_parsed_tracks.append(i)
+            _ = int(i.split('_')[1])
+            if _ not in idx:
+                self._un_parsed_tracks.append(_)
 
     def _decode_playlist(self, items):
         response = self._post(
