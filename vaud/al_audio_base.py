@@ -20,7 +20,7 @@ class AlAudioBase(object):
         'Safari/537.36'
     )
     _playlist_id = -1  # Default - all tracks
-    _sleep_time = 10
+    _sleep_time = 15
     _split_audio_size = 6
     _response_as_tuples_list = False
 
@@ -166,8 +166,9 @@ class AlAudioBase(object):
     def __check_un_parsed_tracks(self, items, response):
         idx = self.__get_tracks_ids(response)
         for i in items:
-            if i not in idx:
-                self._list_unparsed_tracks.append(i)
+            _ = int(i.split('_')[1])
+            if _ not in idx:
+                self._list_unparsed_tracks.append(_)
 
     def __rebuild_response(self, response):
         if isinstance(response, list):

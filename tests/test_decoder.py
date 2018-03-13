@@ -21,6 +21,10 @@ class TestUrls(unittest.TestCase):
         decoded_url = decode(self.__uid, self.__urls[0])
         self.assertFalse(~decoded_url.find('audio_api_unavailable'))
 
+    def test_fail_url0(self):
+        decoded_url = decode(253093876, self.__urls[0])
+        self.assertTrue(~decoded_url.find('audio_api_unavailable'))
+
     def test_fail_url1(self):
         decoded_url = decode(self.__uid, self.__urls[0] + 'abc')
         self.assertTrue(~decoded_url.find('audio_api_unavailable'))
