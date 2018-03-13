@@ -7,7 +7,6 @@ from time import sleep
 class AlAudioBase(object):
     limit = 0
     offset = 0
-    debug = False
     response_debug_callback = None
     force_data = False  # Ignore hasMore flag from response
 
@@ -144,8 +143,6 @@ class AlAudioBase(object):
 
         _ = self._parse_response(response)
         if not isinstance(_, list) or len(_) < 1:
-            if self.debug:
-                print('Time ban. Sleep...')
 
             sleep(self._sleep_time)
 
