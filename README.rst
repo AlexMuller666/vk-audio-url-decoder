@@ -50,7 +50,7 @@ Get all audio (not auto-decode):
     uid = my_vk.uid  # User id
 
     audio_parser = vaud.AlAudio(uid, cookies)
-    urls = audio_parser.main()  [{'ur': 'Encoded url', 'track': 'Track title', 'author': 'Author', 'id': 'VK Track id'}, ...]
+    urls = audio_parser.main()  [{'url': 'Encoded url', 'track': 'Track title', 'author': 'Author', 'id': 'VK Track id'}, ...]
     urls = audio_parser.main(True)  [('Encoded url', 'Track title', 'Author', 'VK Track id'), ...]
 
     decoded_urls = []  # Look before examples
